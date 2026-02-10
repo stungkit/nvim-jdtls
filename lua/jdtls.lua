@@ -1227,7 +1227,16 @@ function M.open_classfile(fname)
   vim.bo[buf].modifiable = true
   vim.bo[buf].swapfile = false
   vim.bo[buf].buftype = 'nofile'
-  vim.bo[buf].filetype = 'java'
+  local class_fn = uri:match("contents/[^/]+/[%a%d._-]+/([^?]+)") or ""
+  local class_ext = vim.fn.fnamemodify(class_fn, ":e")
+  local filetype = "java"
+  if class_ext ~= "class" and vim.filetype and vim.filetype.match then
+    local ok, ft = pcall(vim.filetype.match, { filename = class_fn })
+    if ok and ft then
+      filetype = ft
+    end
+  end
+  vim.bo[buf].filetype = filetype
   local timeout_ms = M.settings.jdt_uri_timeout_ms
 
   local altbuf = vim.fn.bufnr("#", -1)
