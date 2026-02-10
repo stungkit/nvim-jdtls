@@ -1230,7 +1230,7 @@ function M.open_classfile(fname)
   local class_fn = uri:match("contents/[^/]+/[%a%d._-]+/([^?]+)") or ""
   local class_ext = vim.fn.fnamemodify(class_fn, ":e")
   local filetype = "java"
-  if class_ext ~= "class" and vim.filetype and vim.filetype.match then
+  if class_fn ~= "" and class_ext ~= "class" and vim.filetype and vim.filetype.match then
     local ok, ft = pcall(vim.filetype.match, { filename = class_fn })
     if ok and ft then
       filetype = ft
